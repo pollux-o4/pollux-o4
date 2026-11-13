@@ -1,4 +1,4 @@
-name: GitHub-Profile-3D-Contrib
+name: Profile contributions
 
 on:
   schedule: # 03:00 JST == 18:00 UTC
@@ -11,18 +11,19 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: generate-github-profile-3d-contrib
+    name: render-contribution-panel
     steps:
       - uses: actions/checkout@v5
-      - uses: yoshi389111/github-profile-3d-contrib@latest
+      - name: Render contribution heatmap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
+        run: python3 scripts/build.py live
       - name: Commit & Push
         run: |
           git config user.name pollux-o4
-          git config user.email orix2654@gmail.com
-          git add -A .
+          git config user.email pollux-o4@users.noreply.github.com
+          git add assets/contrib-*.svg
           if git commit -m "generated"; then
             git push
           fi
